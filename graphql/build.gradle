@@ -1,0 +1,27 @@
+plugins {
+    id "com.netflix.dgs.codegen" version "5.6.3"
+}
+
+apply plugin: 'java-library'
+
+task wrapper(type: Wrapper){
+    gradleVersion = '7.2'
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    dgsCodegen {
+        java {
+            srcDir "${buildDir}/generated/sources/dgs-codegen"
+        }
+    }
+}
+
+generateJava {
+    schemaPaths = ["${projectDir}/src/main/resources/schema"]
+    packageName = "com.vipul.messaging.graphql"
+    generateClient = true
+}

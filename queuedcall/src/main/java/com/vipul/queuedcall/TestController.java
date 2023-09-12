@@ -2,6 +2,7 @@ package com.vipul.queuedcall;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,8 +15,7 @@ import java.util.concurrent.ExecutionException;
 @RequiredArgsConstructor
 public class TestController {
 
-    @Autowired
-    private TestInterface testInterface;
+    private final TestInterface testInterface;
 
     @GetMapping("/hello")
     public Object hello() throws ExecutionException, InterruptedException {

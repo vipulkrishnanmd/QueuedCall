@@ -1,4 +1,4 @@
-package com.vipul.queuedcall.core;
+package com.vipul.queuedcall.annotation;
 
 import org.springframework.stereotype.Controller;
 

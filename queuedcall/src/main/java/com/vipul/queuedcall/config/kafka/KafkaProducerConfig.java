@@ -1,4 +1,4 @@
-package com.vipul.queuedcall.config;
+package com.vipul.queuedcall.config.kafka;
 
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.springframework.beans.factory.annotation.Value;

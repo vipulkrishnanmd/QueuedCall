@@ -1,10 +1,10 @@
 package com.vipul.queuedcall;
 
-import com.vipul.queuedcall.core.QueuedApi;
+import com.vipul.queuedcall.annotation.QueuedCallApi;
 
 import java.util.concurrent.CompletableFuture;
 
-@QueuedApi
+@QueuedCallApi
 public interface TestInterface {
     public CompletableFuture<String> getHi(String name);
 }

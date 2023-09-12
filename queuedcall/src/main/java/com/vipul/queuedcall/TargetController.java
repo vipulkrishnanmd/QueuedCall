@@ -1,6 +1,6 @@
 package com.vipul.queuedcall;
 
-import com.vipul.queuedcall.core.QueueCalledController;
+import com.vipul.queuedcall.annotation.QueueCalledController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 

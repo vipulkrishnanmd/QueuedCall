@@ -1,4 +1,4 @@
-package com.vipul.queuedcall.config;
+package com.vipul.queuedcall.core;
 
 import java.util.HashMap;
 import java.util.Map;

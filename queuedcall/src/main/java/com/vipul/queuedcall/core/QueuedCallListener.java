@@ -1,26 +1,16 @@
 package com.vipul.queuedcall.core;
 
 import com.vipul.queuedcall.QueuedCall;
-import com.vipul.queuedcall.QueuedCallRequest;
-import com.vipul.queuedcall.QueuedCallResponse;
-
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
 
-@Component
-@RequiredArgsConstructor
-public class QueuedCallListener {
-    private final QueuedCallEngine queuedCallEngine;
+public abstract class QueuedCallListener {
+    @Autowired
+    private QueuedCallEngine queuedCallEngine;
 
-    public  void listen(QueuedCall data) {
-        if ("request".equals(data.getType())) {
-            QueuedCallRequest request = (QueuedCallRequest) data;
-            queuedCallEngine.processRequest(request);
-        }
+    public abstract void listen();
 
-        if ("response".equals(data.getType())) {
-            QueuedCallResponse response = (QueuedCallResponse) data;
-            queuedCallEngine.processResponse(response);
-        }
+    protected void processQueuedCall(QueuedCall data) {
+        this.queuedCallEngine.listen(data);
     }
 }

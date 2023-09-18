@@ -3,21 +3,17 @@ package com.vipul.queuedcall.kafka;
 import com.vipul.queuedcall.QueuedCall;
 import com.vipul.queuedcall.core.QueuedCallListener;
 import lombok.RequiredArgsConstructor;
-import org.springframework.kafka.annotation.KafkaListener;
-import org.springframework.stereotype.Component;
+import org.springframework.kafka.listener.MessageListener;
+import org.springframework.kafka.listener.MessageListenerContainer;
 
-@Component
+import javax.annotation.PostConstruct;
 @RequiredArgsConstructor
-public class KafkaQueuedCallListener {
+public class KafkaQueuedCallListener extends QueuedCallListener {
+    private final MessageListenerContainer container;
 
-    private final QueuedCallListener listener;
-
-    @KafkaListener(
-            topics = "queued-call",
-            groupId = "one",
-            containerFactory = "factory"
-    )
-    void listen(QueuedCall data) {
-        listener.listen(data);
+    @PostConstruct
+    public void listen() {
+        container.setupMessageListener(
+                (MessageListener<String, QueuedCall>) (d) -> this.processQueuedCall(d.value()));
     }
 }

@@ -10,6 +10,6 @@ public class KafkaTopicConfig {
 
     @Bean
     public NewTopic messagingBusTopic() {
-        return TopicBuilder.name("queued-call").build();
+        return TopicBuilder.name("queued-call").partitions(3).build();
     }
 }

@@ -1,5 +1,6 @@
 package com.vipul.queuedcall.core;
 
+import com.vipul.queuedcall.QueuedCall;
 import com.vipul.queuedcall.QueuedCallRequest;
 import com.vipul.queuedcall.QueuedCallResponse;
 import com.vipul.queuedcall.annotation.QueuedCallApi;
@@ -28,7 +29,7 @@ public class QueuedCallEngine {
     private final BeanFactory beanFactory;
     private final GenericApplicationContext applicationContext;
 
-    public void processRequest(QueuedCallRequest request) {
+    private void processRequest(QueuedCallRequest request) {
         Method method = queueCalledMethods.get(request.getName());
 
         try {
@@ -47,7 +48,7 @@ public class QueuedCallEngine {
         }
     }
 
-    public void processResponse(QueuedCallResponse response) {
+    private void processResponse(QueuedCallResponse response) {
         CompletableFuture<Object> result = ResultStore.resultMap.get(response.getId());
         result.complete(response.getResponse());
     }
@@ -65,6 +66,18 @@ public class QueuedCallEngine {
         CompletableFuture<Object> result = new CompletableFuture<>();
         ResultStore.resultMap.put(id, result);
         return result;
+    }
+
+    public void listen(QueuedCall data) {
+        if ("request".equals(data.getType())) {
+            QueuedCallRequest request = (QueuedCallRequest) data;
+            this.processRequest(request);
+        }
+
+        if ("response".equals(data.getType())) {
+            QueuedCallResponse response = (QueuedCallResponse) data;
+            this.processResponse(response);
+        }
     }
 
     @PostConstruct

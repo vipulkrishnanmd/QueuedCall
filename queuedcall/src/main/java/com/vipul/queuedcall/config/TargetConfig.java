@@ -1,6 +1,7 @@
 package com.vipul.queuedcall.config;
 
 import com.vipul.queuedcall.annotation.QueueCalledController;
+import com.vipul.queuedcall.annotation.QueueCalledName;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 import org.springframework.context.annotation.Bean;
@@ -24,6 +25,9 @@ public class TargetConfig {
                 .stream()
                 .map(cl -> Arrays.asList(cl.getDeclaredMethods()))
                 .flatMap(Collection::stream)
-                .collect(Collectors.toMap(m -> m.getName(), m -> m));
+                .collect(Collectors.toMap(m -> {
+                    QueueCalledName annotation = m.getAnnotation(QueueCalledName.class);
+                    return annotation == null ? m.getName() : annotation.value();
+                }, m -> m));
     }
 }

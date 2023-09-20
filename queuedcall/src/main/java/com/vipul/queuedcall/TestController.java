@@ -19,7 +19,7 @@ public class TestController {
 
     @GetMapping("/hello")
     public Object hello() throws ExecutionException, InterruptedException {
-        CompletableFuture<String> result = testInterface.getHi("hi" );
+        CompletableFuture<String> result = testInterface.getHiiiii("hi" );
         System.out.println("reaching final");
         Object something = result.get();
         return something;

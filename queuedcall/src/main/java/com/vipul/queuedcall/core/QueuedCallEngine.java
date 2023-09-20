@@ -3,6 +3,7 @@ package com.vipul.queuedcall.core;
 import com.vipul.queuedcall.QueuedCall;
 import com.vipul.queuedcall.QueuedCallRequest;
 import com.vipul.queuedcall.QueuedCallResponse;
+import com.vipul.queuedcall.annotation.QueueCalledTarget;
 import com.vipul.queuedcall.annotation.QueuedCallApi;
 import lombok.RequiredArgsConstructor;
 import org.reflections.Reflections;
@@ -13,6 +14,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -55,13 +57,16 @@ public class QueuedCallEngine {
 
     public CompletableFuture<Object> sendRequest(Method method, Object[] methodArgs) {
         String id = UUID.randomUUID().toString();
+        QueueCalledTarget annotation = method.getAnnotation(QueueCalledTarget.class);
+
         QueuedCallRequest request = QueuedCallRequest.builder()
                 .id(id)
                 .type("request")
-                .name(method.getName())
+                .name(annotation != null ? annotation.value() : method.getName())
                 .paramTypes(method.getParameterTypes())
                 .args(methodArgs)
                 .build();
+
         queuedCallSender.send(request);
         CompletableFuture<Object> result = new CompletableFuture<>();
         ResultStore.resultMap.put(id, result);

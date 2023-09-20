@@ -1,6 +1,7 @@
 package com.vipul.queuedcall;
 
 import com.vipul.queuedcall.annotation.QueueCalledController;
+import com.vipul.queuedcall.annotation.QueueCalledName;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
@@ -18,7 +19,8 @@ public class TargetController {
         return "hello " + name;
     }
 
-    public String getHi(String name) {
+    @QueueCalledName("getHi")
+    public String getHiooo(String name) {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {

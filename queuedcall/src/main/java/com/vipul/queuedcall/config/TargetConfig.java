@@ -1,5 +1,6 @@
 package com.vipul.queuedcall.config;
 
+import com.vipul.queuedcall.annotation.BatchedQueueCalled;
 import com.vipul.queuedcall.annotation.QueueCalledController;
 import com.vipul.queuedcall.annotation.QueueCalledName;
 import org.reflections.Reflections;
@@ -25,6 +26,23 @@ public class TargetConfig {
                 .stream()
                 .map(cl -> Arrays.asList(cl.getDeclaredMethods()))
                 .flatMap(Collection::stream)
+                .collect(Collectors.toMap(m -> {
+                    QueueCalledName annotation = m.getAnnotation(QueueCalledName.class);
+                    return annotation == null ? m.getName() : annotation.value();
+                }, m -> m));
+    }
+
+    @Bean
+    public Map<String, Method> batchedQueueCalledMethods() {
+        Reflections reflections = new Reflections(
+                "com.vipul", // TODO: get from properties file
+                Scanners.TypesAnnotated);
+
+        return reflections.getTypesAnnotatedWith(QueueCalledController.class)
+                .stream()
+                .map(cl -> Arrays.asList(cl.getDeclaredMethods()))
+                .flatMap(Collection::stream)
+                .filter(method -> Arrays.stream(method.getDeclaredAnnotations()).filter(annotation -> annotation instanceof BatchedQueueCalled).collect(Collectors.toList()).size() > 0)
                 .collect(Collectors.toMap(m -> {
                     QueueCalledName annotation = m.getAnnotation(QueueCalledName.class);
                     return annotation == null ? m.getName() : annotation.value();

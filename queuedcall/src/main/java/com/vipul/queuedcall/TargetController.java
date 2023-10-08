@@ -1,5 +1,6 @@
 package com.vipul.queuedcall;
 
+import com.vipul.queuedcall.annotation.BatchedQueueCalled;
 import com.vipul.queuedcall.annotation.QueueCalledController;
 import com.vipul.queuedcall.annotation.QueueCalledName;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +13,8 @@ import java.util.Map;
 @Controller
 public class TargetController {
 
-    @Autowired
-    private Map<String, Method> resultMap;
+//    @Autowired
+//    private Map<String, Method> resultMap;
 
     public String testMethod(String name) {
         return "hello " + name;
@@ -27,5 +28,11 @@ public class TargetController {
             e.printStackTrace();
         }
         return "hello from target, " + name;
+    }
+
+    @QueueCalledName("todaysHeadlines")
+    @BatchedQueueCalled
+    public String batchedSample() {
+        return "reaching batched sample";
     }
 }

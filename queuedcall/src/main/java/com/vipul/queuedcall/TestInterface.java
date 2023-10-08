@@ -9,4 +9,7 @@ import java.util.concurrent.CompletableFuture;
 public interface TestInterface {
     @QueueCalledTarget("getHi")
     public CompletableFuture<String> getHiiiii(String name);
+
+    @QueueCalledTarget("todaysHeadlines")
+    public CompletableFuture<String> headlines();
 }

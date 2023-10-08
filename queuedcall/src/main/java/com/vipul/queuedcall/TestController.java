@@ -24,4 +24,12 @@ public class TestController {
         Object something = result.get();
         return something;
     }
+
+    @GetMapping("/headlines")
+    public Object headlines() throws ExecutionException, InterruptedException {
+        CompletableFuture<String> result = testInterface.headlines();
+        System.out.println("reaching final 2");
+        Object something = result.get();
+        return something;
+    }
 }

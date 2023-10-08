@@ -12,4 +12,9 @@ public class KafkaTopicConfig {
     public NewTopic messagingBusTopic() {
         return TopicBuilder.name("queued-call").partitions(3).build();
     }
+
+    @Bean
+    public NewTopic kafkaStreamTopic() {
+        return TopicBuilder.name("queued-call-stream").partitions(3).build();
+    }
 }

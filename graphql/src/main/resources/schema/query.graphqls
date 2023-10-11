@@ -1,4 +1,0 @@
-type Query {
-    getConversation(id: ID!): ConversationResult
-    getContact(id: ID!): ContactResult!
-}

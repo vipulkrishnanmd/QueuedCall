@@ -1,7 +1,6 @@
 package com.vipul.queuedcall.config.kafka;
 
 import com.vipul.queuedcall.QueuedCall;
-import com.vipul.queuedcall.QueuedCallBatchedRequest;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;

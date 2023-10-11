@@ -4,9 +4,7 @@ import com.vipul.queuedcall.QueuedCall;
 import com.vipul.queuedcall.core.QueuedCallSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
-import org.springframework.stereotype.Component;
 
-@Component
 @RequiredArgsConstructor
 public class KafkaQueuedCallSender implements QueuedCallSender {
 

@@ -1,19 +1,15 @@
 package com.vipul.queuedcall.config;
 
-import com.vipul.queuedcall.QueuedCall;
 import com.vipul.queuedcall.core.QueuedCallListener;
 import com.vipul.queuedcall.core.QueuedCallSender;
+import com.vipul.queuedcall.kafka.KafkaQueuedCallBatchedListener;
 import com.vipul.queuedcall.kafka.KafkaQueuedCallListener;
 import com.vipul.queuedcall.kafka.KafkaQueuedCallSender;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.listener.MessageListenerContainer;
-
-import javax.annotation.PostConstruct;
 
 @Configuration
 @RequiredArgsConstructor

@@ -1,6 +1,7 @@
 package com.vipul.queuedcall.kafka;
 
 import com.vipul.queuedcall.config.kafka.KafkaTopicConfig;
+import com.vipul.queuedcall.core.QueuedCallType;
 import com.vipul.queuedcall.model.QueuedCall;
 import com.vipul.queuedcall.model.QueuedCallBatchedRequest;
 import com.vipul.queuedcall.model.QueuedCallRequest;
@@ -16,6 +17,7 @@ import org.apache.kafka.streams.kstream.Suppressed;
 import org.apache.kafka.streams.kstream.TimeWindows;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.listener.MessageListener;
 import org.springframework.kafka.listener.MessageListenerContainer;
 import org.springframework.kafka.support.serializer.JsonSerde;
@@ -39,17 +41,17 @@ public class KafkaQueuedCallBatchedListener extends QueuedCallBatchedListener {
     @Qualifier("queueCalledMethods")
     private Map<String, Method> queueCalledMethods;
 
+    @Value("${queuedcall.kafka.batched.window-size:1000}")
+    private Integer windowSize;
+
     @PostConstruct
     public void listen() {
-        // TODO Write the Kafka streams processing code here?
-        // Then it means the queue is specific to the listener side? because there should be only one place
-        // that creates the stream processing.
-
+        // Initialise stream processing
         KStream<String, Object> stream = streamsBuilder.stream(KafkaTopicConfig.TOPIC_NAME);
-        stream.filter((id, x) -> ((QueuedCall) x).getType().equals("request"))
+        stream.filter((id, x) -> ((QueuedCall) x).getType().equals(QueuedCallType.REQUEST))
                 .filter((id, x) -> (queueCalledMethods.keySet().contains(((QueuedCallRequest) x).getName())))
                 .groupBy((id, x) -> ((QueuedCallRequest) x).getName())
-                .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofSeconds(10)))
+                .windowedBy(TimeWindows.ofSizeWithNoGrace(Duration.ofMillis(this.windowSize)))
                 .aggregate(
                         () -> new HashMap<String, Object>(),
                         (key, value, aggregate) -> {
@@ -60,13 +62,17 @@ public class KafkaQueuedCallBatchedListener extends QueuedCallBatchedListener {
                 )
                 .suppress(Suppressed.untilWindowCloses(Suppressed.BufferConfig.unbounded()))
                 .toStream()
-                .map((k,v) -> KeyValue.pair(k.key(), QueuedCallBatchedRequest.builder().batch((ArrayList) v.values().stream().collect(Collectors.toList())).name(k.key()).type("batched-request").build()))
-                // note: if we are not doing k.key() here, then in .to() we should give serdes as WindowedSerdes.timeWindowedSerdeFrom(String.class, 10000)
-                .mapValues(x -> {
-                    System.out.println("reaching here 2"); return x;
-                })
+                .map((k,v) -> KeyValue.pair(k.key(),
+                        QueuedCallBatchedRequest.builder()
+                                .batch((ArrayList) v.values().stream().collect(Collectors.toList()))
+                                .name(k.key())
+                                .type(QueuedCallType.BATCHED_REQUEST)
+                                .build()))
+                // note: if we are not doing k.key() here, then in .to() we should give serdes as
+                // WindowedSerdes.timeWindowedSerdeFrom(String.class, 10000)
                 .to(KafkaTopicConfig.TOPIC_NAME, Produced.with(Serdes.String(), new JsonSerde<>()));
 
+        // set up message listener
         container.setupMessageListener(
                 (MessageListener<String, QueuedCall>) (d) -> this.processQueuedCall(d.value()));
     }

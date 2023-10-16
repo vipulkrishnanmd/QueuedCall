@@ -27,7 +27,7 @@ public class KafkaStreamConfig {
     @Bean(name = KafkaStreamsDefaultConfiguration.DEFAULT_STREAMS_CONFIG_BEAN_NAME)
     KafkaStreamsConfiguration kStreamsConfig() {
         Map<String, Object> props = new HashMap<>();
-        props.put(APPLICATION_ID_CONFIG, "streams-app5");
+        props.put(APPLICATION_ID_CONFIG, "queuedcall-streams-app");
         props.put(BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
          props.put(DEFAULT_KEY_SERDE_CLASS_CONFIG, Serdes.String().getClass().getName());
          props.put(DEFAULT_VALUE_SERDE_CLASS_CONFIG, JsonSerde.class);

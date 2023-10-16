@@ -5,6 +5,7 @@ import com.vipul.queuedcall.model.QueuedCallBatchedRequest;
 import com.vipul.queuedcall.model.QueuedCallResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -17,12 +18,12 @@ public abstract class QueuedCallBatchedListener extends QueuedCallListener{
     private Map<String, Method> batchedQueueCalledMethods;
 
     protected void listen(QueuedCall data) {
-        if ("batched-request".equals(data.getType())) {
+        if (QueuedCallType.BATCHED_REQUEST.equals(data.getType())) {
             QueuedCallBatchedRequest request = (QueuedCallBatchedRequest) data;
             this.processBatchedRequest(request);
         }
 
-        if ("response".equals(data.getType())) {
+        if (QueuedCallType.RESPONSE.equals(data.getType())) {
             QueuedCallResponse response = (QueuedCallResponse) data;
             this.processResponse(response);
         }
@@ -43,7 +44,7 @@ public abstract class QueuedCallBatchedListener extends QueuedCallListener{
                             QueuedCallResponse.builder()
                                     .response(result.get(id))
                                     .id(id)
-                                    .type("response")
+                                    .type(QueuedCallType.RESPONSE)
                                     .build()));
             } catch (IllegalAccessException e) {
                 e.printStackTrace();

@@ -6,6 +6,7 @@ import com.vipul.queuedcall.annotation.QueuedCallApi;
 import lombok.RequiredArgsConstructor;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -21,13 +22,16 @@ public class QueuedCallApiInitiator {
     private final QueuedCallSender queuedCallSender;
     private final GenericApplicationContext applicationContext;
 
+    @Value("${queuedcall.root-package}")
+    private String rootPackage;
+
     public CompletableFuture<Object> sendRequest(Method method, Object[] methodArgs) {
         String id = UUID.randomUUID().toString();
         QueueCalledTarget annotation = method.getAnnotation(QueueCalledTarget.class);
 
         QueuedCallRequest request = QueuedCallRequest.builder()
                 .id(id)
-                .type("request")
+                .type(QueuedCallType.REQUEST)
                 .name(annotation != null ? annotation.value() : method.getName())
                 .paramTypes(method.getParameterTypes())
                 .args(methodArgs)
@@ -42,7 +46,7 @@ public class QueuedCallApiInitiator {
     @PostConstruct
     public void registerQueuedApis() {
         Reflections reflectionsTwo = new Reflections(
-                "com", // TODO: get from properties file
+                rootPackage,
                 Scanners.TypesAnnotated);
 
         reflectionsTwo.getTypesAnnotatedWith(QueuedCallApi.class).stream().forEach(type -> {

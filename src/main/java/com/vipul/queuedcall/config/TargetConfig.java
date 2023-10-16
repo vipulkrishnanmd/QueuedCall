@@ -5,6 +5,7 @@ import com.vipul.queuedcall.annotation.QueueCalledController;
 import com.vipul.queuedcall.annotation.QueueCalledName;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -16,10 +17,14 @@ import java.util.stream.Collectors;
 
 @Configuration
 public class TargetConfig {
+
+    @Value("${queuedcall.root-package}")
+    private String rootPackage;
+
     @Bean
     public Map<String, Method> queueCalledMethods() {
         Reflections reflections = new Reflections(
-                "com", // TODO: get from properties file
+                rootPackage,
                 Scanners.TypesAnnotated);
 
         return reflections.getTypesAnnotatedWith(QueueCalledController.class)
@@ -35,7 +40,7 @@ public class TargetConfig {
     @Bean
     public Map<String, Method> batchedQueueCalledMethods() {
         Reflections reflections = new Reflections(
-                "com", // TODO: get from properties file
+                rootPackage,
                 Scanners.TypesAnnotated);
 
         return reflections.getTypesAnnotatedWith(QueueCalledController.class)

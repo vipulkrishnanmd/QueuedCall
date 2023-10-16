@@ -28,12 +28,12 @@ public abstract class QueuedCallListener {
     }
 
     protected void listen(QueuedCall data) {
-        if ("request".equals(data.getType())) {
+        if (QueuedCallType.REQUEST.equals(data.getType())) {
             QueuedCallRequest request = (QueuedCallRequest) data;
             this.processRequest(request);
         }
 
-        if ("response".equals(data.getType())) {
+        if (QueuedCallType.RESPONSE.equals(data.getType())) {
             QueuedCallResponse response = (QueuedCallResponse) data;
             this.processResponse(response);
         }
@@ -48,7 +48,7 @@ public abstract class QueuedCallListener {
                     QueuedCallResponse.builder()
                             .response(result)
                             .id(request.getId())
-                            .type("response")
+                            .type(QueuedCallType.RESPONSE)
                             .build());
 
         } catch (IllegalAccessException e) {

@@ -1,11 +1,10 @@
-package com.vipul.queuedcall;
+package com.vipul.queuedcall.model;
 
 import lombok.Builder;
 import lombok.Data;
 import lombok.extern.jackson.Jacksonized;
 
 import java.util.List;
-import java.util.Map;
 
 @Data
 @Builder

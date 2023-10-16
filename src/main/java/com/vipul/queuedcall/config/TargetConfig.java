@@ -19,7 +19,7 @@ public class TargetConfig {
     @Bean
     public Map<String, Method> queueCalledMethods() {
         Reflections reflections = new Reflections(
-                "com.vipul", // TODO: get from properties file
+                "com", // TODO: get from properties file
                 Scanners.TypesAnnotated);
 
         return reflections.getTypesAnnotatedWith(QueueCalledController.class)
@@ -35,7 +35,7 @@ public class TargetConfig {
     @Bean
     public Map<String, Method> batchedQueueCalledMethods() {
         Reflections reflections = new Reflections(
-                "com.vipul", // TODO: get from properties file
+                "com", // TODO: get from properties file
                 Scanners.TypesAnnotated);
 
         return reflections.getTypesAnnotatedWith(QueueCalledController.class)

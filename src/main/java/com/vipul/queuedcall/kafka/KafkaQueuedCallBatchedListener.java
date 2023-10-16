@@ -1,8 +1,9 @@
 package com.vipul.queuedcall.kafka;
 
-import com.vipul.queuedcall.QueuedCall;
-import com.vipul.queuedcall.QueuedCallBatchedRequest;
-import com.vipul.queuedcall.QueuedCallRequest;
+import com.vipul.queuedcall.config.kafka.KafkaTopicConfig;
+import com.vipul.queuedcall.model.QueuedCall;
+import com.vipul.queuedcall.model.QueuedCallBatchedRequest;
+import com.vipul.queuedcall.model.QueuedCallRequest;
 import com.vipul.queuedcall.core.QueuedCallBatchedListener;
 import lombok.RequiredArgsConstructor;
 import org.apache.kafka.common.serialization.Serdes;
@@ -44,7 +45,7 @@ public class KafkaQueuedCallBatchedListener extends QueuedCallBatchedListener {
         // Then it means the queue is specific to the listener side? because there should be only one place
         // that creates the stream processing.
 
-        KStream<String, Object> stream = streamsBuilder.stream("queued-call");
+        KStream<String, Object> stream = streamsBuilder.stream(KafkaTopicConfig.TOPIC_NAME);
         stream.filter((id, x) -> ((QueuedCall) x).getType().equals("request"))
                 .filter((id, x) -> (queueCalledMethods.keySet().contains(((QueuedCallRequest) x).getName())))
                 .groupBy((id, x) -> ((QueuedCallRequest) x).getName())
@@ -64,7 +65,7 @@ public class KafkaQueuedCallBatchedListener extends QueuedCallBatchedListener {
                 .mapValues(x -> {
                     System.out.println("reaching here 2"); return x;
                 })
-                .to("queued-call", Produced.with(Serdes.String(), new JsonSerde<>()));
+                .to(KafkaTopicConfig.TOPIC_NAME, Produced.with(Serdes.String(), new JsonSerde<>()));
 
         container.setupMessageListener(
                 (MessageListener<String, QueuedCall>) (d) -> this.processQueuedCall(d.value()));

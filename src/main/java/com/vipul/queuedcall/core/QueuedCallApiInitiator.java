@@ -1,6 +1,6 @@
 package com.vipul.queuedcall.core;
 
-import com.vipul.queuedcall.QueuedCallRequest;
+import com.vipul.queuedcall.model.QueuedCallRequest;
 import com.vipul.queuedcall.annotation.QueueCalledTarget;
 import com.vipul.queuedcall.annotation.QueuedCallApi;
 import lombok.RequiredArgsConstructor;
@@ -42,7 +42,7 @@ public class QueuedCallApiInitiator {
     @PostConstruct
     public void registerQueuedApis() {
         Reflections reflectionsTwo = new Reflections(
-                "com.vipul", // TODO: get from properties file
+                "com", // TODO: get from properties file
                 Scanners.TypesAnnotated);
 
         reflectionsTwo.getTypesAnnotatedWith(QueuedCallApi.class).stream().forEach(type -> {

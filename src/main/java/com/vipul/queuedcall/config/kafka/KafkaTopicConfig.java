@@ -8,13 +8,10 @@ import org.springframework.kafka.config.TopicBuilder;
 @Configuration
 public class KafkaTopicConfig {
 
-    @Bean
-    public NewTopic messagingBusTopic() {
-        return TopicBuilder.name("queued-call").partitions(3).build();
-    }
+    public static String TOPIC_NAME = "queued-call";
 
     @Bean
-    public NewTopic kafkaStreamTopic() {
-        return TopicBuilder.name("queued-call-stream").partitions(3).build();
+    public NewTopic messagingBusTopic() {
+        return TopicBuilder.name(KafkaTopicConfig.TOPIC_NAME).partitions(3).build();
     }
 }

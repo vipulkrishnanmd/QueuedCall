@@ -19,14 +19,28 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.kafka:spring-kafka'
     implementation 'org.apache.kafka:kafka-streams'
+    implementation 'org.reflections:reflections:0.10.2'
+
+    compileOnly 'org.projectlombok:lombok'
+
+    annotationProcessor 'org.projectlombok:lombok'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.kafka:spring-kafka-test'
-
-    implementation 'org.reflections:reflections:0.10.2'
-    compileOnly 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok'
 }
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+task fatJar(type: Jar) {
+    // Samples not needed for the library
+    exclude('com/vipul/queuedcall/sample/**')
+
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+    with jar
 }

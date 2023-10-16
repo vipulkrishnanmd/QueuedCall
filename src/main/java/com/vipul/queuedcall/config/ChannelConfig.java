@@ -6,6 +6,7 @@ import com.vipul.queuedcall.kafka.KafkaQueuedCallBatchedListener;
 import com.vipul.queuedcall.kafka.KafkaQueuedCallListener;
 import com.vipul.queuedcall.kafka.KafkaQueuedCallSender;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -18,6 +19,7 @@ public class ChannelConfig {
     private final MessageListenerContainer messageListenerContainer;
 
     @Bean
+    @ConditionalOnMissingBean(QueuedCallSender.class)
     // Auto-configured to use the kafka template
     // But the user can override this config.
     public QueuedCallSender queuedCallSender() {
@@ -25,6 +27,7 @@ public class ChannelConfig {
     }
 
     @Bean
+    @ConditionalOnMissingBean(QueuedCallListener.class)
     public QueuedCallListener queuedCallListener() {
         return new KafkaQueuedCallListener(messageListenerContainer);
     }

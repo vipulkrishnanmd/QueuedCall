@@ -1,8 +1,8 @@
 package com.vipul.queuedcall.core;
 
-import com.vipul.queuedcall.QueuedCall;
-import com.vipul.queuedcall.QueuedCallRequest;
-import com.vipul.queuedcall.QueuedCallResponse;
+import com.vipul.queuedcall.model.QueuedCall;
+import com.vipul.queuedcall.model.QueuedCallRequest;
+import com.vipul.queuedcall.model.QueuedCallResponse;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

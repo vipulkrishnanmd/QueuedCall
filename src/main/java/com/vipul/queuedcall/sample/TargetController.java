@@ -1,38 +1,32 @@
-package com.vipul.queuedcall;
+package com.vipul.queuedcall.sample;
 
 import com.vipul.queuedcall.annotation.BatchedQueueCalled;
 import com.vipul.queuedcall.annotation.QueueCalledController;
 import com.vipul.queuedcall.annotation.QueueCalledName;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-
-import java.lang.reflect.Method;
-import java.util.Map;
 
 @QueueCalledController
 @Controller
 public class TargetController {
 
-//    @Autowired
-//    private Map<String, Method> resultMap;
-
-    public String testMethod(String name) {
-        return "hello " + name;
+    @QueueCalledName("simpleExample")
+    public String simpleExample(String name) {
+        return "hello " + name + ", from simpleExample";
     }
 
-    @QueueCalledName("getHi")
-    public String getHiooo(String name) {
+    @QueueCalledName("delayedExample")
+    public String thisNameDoesntMatter(String name) {
         try {
             Thread.sleep(5000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        return "hello from target, " + name;
+        return "Hello " + name + ", from delayedExample.";
     }
 
-    @QueueCalledName("todaysHeadlines")
+    // No @QueueCalledName, so it takes the method name.
     @BatchedQueueCalled
-    public String batchedSample() {
-        return "reaching batched sample";
+    public String batchedExample() {
+        return "reaching batched example";
     }
 }

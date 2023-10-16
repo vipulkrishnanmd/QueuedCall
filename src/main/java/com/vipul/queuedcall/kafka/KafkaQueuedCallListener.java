@@ -1,6 +1,6 @@
 package com.vipul.queuedcall.kafka;
 
-import com.vipul.queuedcall.QueuedCall;
+import com.vipul.queuedcall.model.QueuedCall;
 import com.vipul.queuedcall.core.QueuedCallListener;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.listener.MessageListener;

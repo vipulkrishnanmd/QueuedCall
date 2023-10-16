@@ -1,6 +1,7 @@
 package com.vipul.queuedcall.kafka;
 
-import com.vipul.queuedcall.QueuedCall;
+import com.vipul.queuedcall.config.kafka.KafkaTopicConfig;
+import com.vipul.queuedcall.model.QueuedCall;
 import com.vipul.queuedcall.core.QueuedCallSender;
 import lombok.RequiredArgsConstructor;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -12,6 +13,6 @@ public class KafkaQueuedCallSender implements QueuedCallSender {
 
     @Override
     public void send(QueuedCall queuedCall) {
-        this.kafkaTemplate.send("queued-call", queuedCall);
+        this.kafkaTemplate.send(KafkaTopicConfig.TOPIC_NAME, queuedCall);
     }
 }

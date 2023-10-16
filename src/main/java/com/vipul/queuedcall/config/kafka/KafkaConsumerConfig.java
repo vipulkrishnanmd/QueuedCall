@@ -1,6 +1,6 @@
 package com.vipul.queuedcall.config.kafka;
 
-import com.vipul.queuedcall.QueuedCall;
+import com.vipul.queuedcall.model.QueuedCall;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -53,7 +53,7 @@ public class KafkaConsumerConfig {
 
     @Bean
     public MessageListenerContainer messageListenerContainer() {
-        return factory().createContainer("queued-call");
+        return factory().createContainer(KafkaTopicConfig.TOPIC_NAME);
     }
 
 }

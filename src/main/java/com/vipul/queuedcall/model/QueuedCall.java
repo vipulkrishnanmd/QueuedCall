@@ -1,4 +1,4 @@
-package com.vipul.queuedcall;
+package com.vipul.queuedcall.model;
 
 import lombok.Builder;
 import lombok.Data;

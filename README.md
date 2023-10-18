@@ -104,4 +104,5 @@ Please see the samples in `src/main/java/com/vipul/queuedcall/sample`. In this e
 - Note: Sample app is not included in the jar file
 
 ## Running the sample app
+- Run `docker-compose up` in the main directory to run kafka on your local machine with docker
 - Run the command `./gradlew bootRun` to run the sample app.

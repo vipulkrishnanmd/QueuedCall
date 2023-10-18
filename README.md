@@ -54,6 +54,46 @@ public class TargetController {
 }
 ```
 
-## How to
-1. Enable Queued-Call
-   Annotate the 
+## How to use
+### 1. Enable Queued-Call
+Annotate the Spring boot app class with `@EnableQueuedCall`. To enable batching, use `@EnableQueuedCallWithBatching` instead
+
+### 2. Configuration
+Do the below configuration in both source and target apps.
+- In the application.properties, set value for `queuedcall.root-package` as your applications root package.
+- If batching is enabled, set the batch window size using the property `queuedcall.kafka.batched.window-size`. Window size is the time period to which the app will wait aggregating the requests to create a batched request.
+- Currently, only Kafka implementation is supported in the library and this implementation uses Spring boot kafka library. Set `spring.kafka.bootstrap-servers` with kafka bootstrap server urls.
+- Create a config class and set up listener and sender. Currently, only Kafka implementation is available.
+```
+@Configuration
+@RequiredArgsConstructor
+public class SampleConfig {
+    private final MessageListenerContainer messageListenerContainer;
+    private final KafkaTemplate kafkaTemplate;
+
+    @Bean
+    @ConditionalOnMissingBean(QueuedCallSender.class)
+    // Auto-configured to use the kafka template
+    // But the user can override this config.
+    public QueuedCallSender queuedCallSender() {
+        return new KafkaQueuedCallSender(kafkaTemplate);
+    }
+    
+    @Bean
+    // Note: For batched, use the below commented config instead
+    public QueuedCallListener queuedCallListener() {
+        return new KafkaQueuedCallListener(messageListenerContainer);
+    }
+
+//    @Bean
+//    public QueuedCallListener queuedCallListener() {
+//        return new KafkaQueuedCallBatchedListener(messageListenerContainer);
+//    }
+}
+```
+### 3. Usage
+Please see the samples in `src/main/java/com/vipul/queuedcall/sample`. In this example, for simplcity, both source and targets are in the same service.
+- TargetController contains the target methods. This controller class and the methods are annotated to mark them as queue called.
+- TestController is a controller in the caller side.
+- TestInterface is an annotated interface. Annotations clearly identifies the target service to be called and the method.
+- When TestController calls methods in TestInterface, the library communicates to the TargetController and returns the result trhough Kafka.

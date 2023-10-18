@@ -97,3 +97,11 @@ Please see the samples in `src/main/java/com/vipul/queuedcall/sample`. In this e
 - TestController is a controller in the caller side.
 - TestInterface is an annotated interface. Annotations clearly identifies the target service to be called and the method.
 - When TestController calls methods in TestInterface, the library communicates to the TargetController and returns the result trhough Kafka.
+
+# Building and adding to project
+- Build a fat jar using the command `./gradlew fatJar`.
+- Copy the jar to your project and add it to you app's gradle dependencies.
+- Note: Sample app is not included in the jar file
+
+# Running sample app
+- Run the command `./gradlew bootRun` to run the sample app.

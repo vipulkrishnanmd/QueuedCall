@@ -30,7 +30,6 @@ public abstract class QueuedCallBatchedListener extends QueuedCallListener{
     }
 
     protected void processBatchedRequest(QueuedCallBatchedRequest request) {
-        System.out.println("reaching QueuedCallBatchedRequest processing");
         Method method = batchedQueueCalledMethods.get(request.getName());
 
         if (method != null) {
